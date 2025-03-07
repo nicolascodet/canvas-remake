@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./backend:/app
+      - /app/venv
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - DB_NAME=canvas_db
+    depends_on:
+      - mongodb
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data: 
